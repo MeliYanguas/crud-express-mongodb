@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <!-- BOOTSTRAP 4 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://bootswatch.com/5/morph/bootstrap.min.css">
+    
+    <style>
+        .tachado{
+            text-decoration: line-through;
+            color:rgb(112, 108, 108);
+        }
+        .caja-form{
+            width: 100%;
+            background-color: rgba(205, 209, 216, 0.137);
+            padding: 10px;
+            margin: auto;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-3">
+        <h1><%= title %></h1>
+
+        <!-- FORM -->
+        <div class="caja-form">
+            <form action="/add" method="POST">
+                <legend>
+                    Agregue una nueva tarea
+                </legend>
+                <div class="form-group">
+                    <input type="text" name="title" id="title" class="form-control" autofocus placeholder="ej: Pasear a Firulais">
+                </div>
+    
+                <div class="form-group mt-2">
+                    <textarea name="description" id="description" cols="50" rows="1" class="form-control" placeholder="llevar a firulais a la plaza por media hora"></textarea>
+                </div>
+    
+                <button type="submit" class="btn btn-primary mt-3">Agregar</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <!-- TABLA -->
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (var i = 0; i < tasks.length; i++){ %>
+                    <tr>
+                        <td><%= i+1 %></td>
+                        
+                        <td class="<%= tasks[i].status ?  'tachado' : '' %>" >
+                        <strong><%= tasks[i].title %></strong></td>
+                        <td 
+                        class="<%= tasks[i].status ?  'tachado' : '' %>">
+                            <%= tasks[i].description %>
+                        </td>
+                        
+                        <td>
+                            <a
+                            class="<%= tasks[i].status ?  'btn btn-success' : 'btn btn-dark' %>" 
+                            href="/turn/<%= tasks[i]._id %>">Hecho</a>
+
+                            <a 
+                            id="delete"
+                            class="btn btn-danger"
+                            href="/delete/<%= tasks[i]._id %>">Borrar</a>
+
+                            <a
+                            class="btn btn-info" 
+                            href="/edit/<%= tasks[i]._id %>">Editar</a>
+                        </td>
+                    </tr>
+                <% } %>
+                
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('delete')
+            .addEventListener('click', function(e){
+               let response =  confirm('are you sure to delete?')
+               if(!response){
+                e.preventDefault();
+               }
+            })
+    </script>
+</body>
+</html>
